@@ -2,10 +2,14 @@ const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
+const helmet = require('helmet');
 
 const PORT = 3000;
 
 const app = express();
+
+//Secirity Related Middleware
+app.use(helmet());
 
 app.get('/secrets', (req, res) => {
     return res.send('Your personal secret value is 42')
