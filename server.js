@@ -11,6 +11,23 @@ const app = express();
 //Secirity Related Middleware
 app.use(helmet());
 
+//OAuth Middleware
+function checkLoggedIn (req, res, next) {
+    const isLoggedIn = true;
+    if (!isLoggedIn) {
+        return res.status(401).json({
+            error:'You must log in!',
+        });
+    }
+    next();
+};
+
+app.get('/auth/google', (req, res) => {});
+
+app.get('/auth/google/callback', (req, res) => {})
+
+app.get('/auth/logout', (req, res) => {});
+
 app.get('/secrets', (req, res) => {
     return res.send('Your personal secret value is 42')
 });
