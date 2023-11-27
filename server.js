@@ -64,7 +64,8 @@ app.use(passport.session());
 
 //OAuth Middleware
 function checkLoggedIn (req, res, next) {
-    const isLoggedIn = true;
+    console.log('Current user is:', req.user)
+    const isLoggedIn = req.isAuthenticated && req.user; //Verify if use is authenticated and user property lives into the request
     if (!isLoggedIn) {
         return res.status(401).json({
             error:'You must log in!',
@@ -84,13 +85,17 @@ app.get('/auth/google/callback', passport.authenticate('google', {
 }), (req, res) => {
     console.log('Google called us back!')
 });
+
 app.get('/failure', (req, res) => {
     return res.send('Failed to log in!')
-})
-app.get('/auth/logout', (req, res) => {});
+});
 
+app.get('/auth/logout', (req, res) => {
+    req.logout(); //Removenreq.user and clears any logged in session
+    return res.redirect('/')
+});
 
-app.get('/secrets', (req, res) => {
+app.get('/secrets', checkLoggedIn, (req, res) => {
     return res.send('Your personal secret value is 42')
 });
 
